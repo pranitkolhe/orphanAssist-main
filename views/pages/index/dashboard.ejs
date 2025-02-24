@@ -1,0 +1,247 @@
+<% layout("layouts/boilerplate.ejs") -%>
+
+<div class="container mt-5">
+  <h1 class="text-center mb-4 display-4">Dashboard</h1>
+
+  <!-- Filter Buttons -->
+  <div class="text-center mb-4">
+    <button class="btn btn-primary filter-btn" data-filter="all">All</button>
+    <button class="btn btn-warning filter-btn" data-filter="pending">
+      Pending
+    </button>
+    <button class="btn btn-success filter-btn" data-filter="accepted">
+      Accepted
+    </button>
+    <button class="btn btn-danger filter-btn" data-filter="rejected">
+      Rejected
+    </button>
+  </div>
+
+  <div class="row" id="request-container">
+    <% requests.forEach((req, index) => { %>
+    <div class="col-md-6 mb-4 request-item" data-status="<%= req.status %>">
+      <div class="card shadow-lg border-0 h-100 position-relative">
+        <!-- Card Header -->
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Request #<%= index + 1 %></h5>
+        </div>
+
+        <div class="card-body position-relative">
+          <!-- Status -->
+          <p class="card-text">
+            <strong>Status:</strong>
+            <span
+              class="btn-badge btn <%= req.status === 'pending' ? 'btn-warning' : req.status === 'accepted' ? 'btn-success' : 'btn-danger' %>"
+            >
+              <%= req.status %>
+            </span>
+          </p>
+
+          <!-- Image container (fixed size and buttons on top) -->
+          <div class="image-container position-relative mb-3">
+            <!-- Image (with fixed size and object-fit cover) -->
+            <img
+              src="/uploads/<%= req.photo %>"
+              class="img-fluid w-100 shadow-sm"
+              alt="Request photo"
+              style="height: 400px; object-fit: cover; border-radius: 8px"
+            />
+
+            <!-- Actions (for organization role) positioned over the image -->
+            <% if (req.status === "pending" && user.role === "organization") {
+            %>
+            <div
+              class="action-buttons position-absolute w-100 h-100 d-flex align-items-center justify-content-center"
+              style="top: 0; left: 0; background: transparent; z-index: 1"
+            >
+              <button
+                class="btn btn-outline-success me-2"
+                data-id="<%= req.id %>"
+                onclick="handleRequest('accept', this)"
+              >
+                <i class="bi bi-check-circle-fill"></i> Accept
+              </button>
+              <button
+                class="btn btn-outline-danger"
+                data-id="<%= req.id %>"
+                onclick="handleRequest('reject', this)"
+              >
+                <i class="bi bi-x-circle-fill"></i> Reject
+              </button>
+            </div>
+            <% } %>
+          </div>
+
+          <p class="card-text"><strong>Location:</strong></p>
+
+          <div
+            class="map-container mb-3"
+            id="map-<%= index %>"
+            data-lat="<%= req.latitude %>"
+            data-lng="<%= req.longitude %>"
+            style="
+              height: 300px;
+              width: 100%;
+              border-radius: 8px;
+              overflow: hidden;
+            "
+          ></div>
+
+          <p class="card-text">
+            <strong>Address:</strong>
+            <span id="address-<%= index %>" class="placeholder-glow">
+              <span class="placeholder col-6"></span>
+            </span>
+          </p>
+        </div>
+
+        <div class="card-footer text-muted text-center">
+          Submitted at: <%= req.created_at %>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+</div>
+
+<style>
+  .card:hover {
+    transform: scale(1.02);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .action-buttons button {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .image-container:hover .action-buttons button {
+    opacity: 1;
+  }
+
+  .placeholder-glow .placeholder {
+    animation: placeholder-glow 1.5s infinite;
+  }
+
+  @keyframes placeholder-glow {
+    0% {
+      background-color: #e0e0e0;
+    }
+    50% {
+      background-color: #f8f9fa;
+    }
+    100% {
+      background-color: #e0e0e0;
+    }
+  }
+</style>
+
+<script>
+  function map() {
+    const mapContainers = document.querySelectorAll(".map-container");
+
+    mapContainers.forEach((mapContainer) => {
+      // Get the latitude and longitude from data attributes
+      const lat = parseFloat(mapContainer.getAttribute("data-lat"));
+      const lng = parseFloat(mapContainer.getAttribute("data-lng"));
+
+      // Initialize the Leaflet map for this specific container
+      const map = L.map(mapContainer).setView([lat, lng], 13);
+
+      // Add the OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+
+      // Add a marker for the location
+      L.marker([lat, lng]).addTo(map).bindPopup("Request location").openPopup();
+
+      // Perform reverse geocoding to get the address
+      const addressElement = document.getElementById(
+        `address-${mapContainer.id.split("-")[1]}`
+      );
+
+      fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data && data.address) {
+            // Update the address span with the formatted address
+            addressElement.textContent =
+              data.display_name || "Address not found";
+          } else {
+            addressElement.textContent = "Address not available";
+          }
+        })
+        .catch((err) => {
+          addressElement.textContent = "Error fetching address";
+        });
+    });
+  }
+  document.addEventListener("DOMContentLoaded", function () {
+    map();
+    filter();
+  });
+
+  function filter() {
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const requestItems = document.querySelectorAll(".request-item");
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const filter = this.getAttribute("data-filter");
+
+        requestItems.forEach((item) => {
+          const status = item.getAttribute("data-status");
+          if (filter === "all" || status === filter) {
+            item.style.display = "block"; // Show item
+          } else {
+            item.style.display = "none"; // Hide item
+          }
+        });
+      });
+    });
+  }
+
+  function handleRequest(action, button) {
+    const requestId = button.getAttribute("data-id");
+    const url = action === "accept" ? "/requests/accept/" : "/requests/reject/";
+
+    // Make a POST request to the server
+    fetch(url + requestId, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then((data) => {
+        // Handle success
+        if (data.success) {
+          // Optionally, you can update the UI to reflect the change
+          button.closest(".card").querySelector(".btn-badge").textContent =
+            action === "accept" ? "accepted" : "rejected";
+          button
+            .closest(".card")
+            .querySelector(".btn-badge").className = `btn-badge ${
+            action === "accept" ? "bg-success" : "bg-danger"
+          } text-dark`;
+          // Disable buttons after action
+          button.closest(".action-buttons").style.display = "none";
+        } else {
+          alert(data.message); // Show error message
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert(
+          "There was an error processing your request. Please try again later."
+        );
+      });
+  }
+</script>
