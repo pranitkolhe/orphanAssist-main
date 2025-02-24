@@ -1,6 +1,19 @@
 const db = require("../config/db.js");
 
 const Organization = {
+  get: () => {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT * FROM organizations";
+      db.query(query, (error, results) => {
+        if (error) {
+          reject(error); // Reject the promise on error
+        } else {
+          resolve(results); // Resolve the promise with results
+        }
+      });
+    });
+  },
+
   create: (data, callback) => {
     console.log(data);
     const query =

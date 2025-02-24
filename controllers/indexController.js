@@ -240,7 +240,13 @@ exports.handleReject = (req, res) => {
 };
 
 
-exports.showAllListing = (req,res) =>{
-  const organisations = req.params;
-  res.render("pages/index/allListing.ejs",{ organisations });
-}
+exports.showAllListing = async (req, res) => {
+  try {
+    const organisations = await Organization.get(); // Wait for the promise to resolve
+    console.log(organisations);
+    res.render("pages/index/allListing.ejs", { organisations });
+  } catch (error) {
+    console.error("Error fetching organizations:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
