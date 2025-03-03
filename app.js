@@ -85,9 +85,9 @@ const httpServer = http.createServer(app);
 
 // Start both HTTP and HTTPS servers
 httpServer.listen(8080, () => {
-  console.log("HTTP Server running on port 8080");
+  console.log("HTTP Server running at: \x1b[36m%s\x1b[0m", "http://localhost:8080"); // Shows clickable link
 });
 
 httpsServer.listen(PORT, () => {
-  console.log(`HTTPS Server running on port ${PORT}`);
+  console.log("HTTPS Server running at: \x1b[36m%s\x1b[0m", `https://localhost:${PORT}`); // Shows clickable link
 });

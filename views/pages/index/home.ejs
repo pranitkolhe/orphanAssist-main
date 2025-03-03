@@ -1,66 +1,41 @@
 <% layout("layouts/boilerplate.ejs") -%>
 
-<% if (user !== null && user.role ==='user') { %>
-<div class="container-fluid mt-5">
-  <h1 class="text-center">Upload Photo of Orphan Child</h1>
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <form
-        action="/upload"
-        method="POST"
-        enctype="multipart/form-data"
-        id="photoForm"
-      >
-        <div class="form-group mb-3">
-          <label for="photo" class="form-label">Upload Photo</label>
-          <input
-            type="file"
-            name="photo"
-            id="photo"
-            class="form-control"
-            accept="image/*"  
-            required
-            onchange="previewImage(event)"
-          />
-        </div>
+<% if (user !== null && user.role === 'user') { %>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Upload Photo of Orphan Child</h1>
+  <div class="upload-box">
+    <form action="/upload" method="POST" enctype="multipart/form-data" id="photoForm">
+      <div class="form-group">
+        <label for="photo">Upload Photo</label>
+        <input type="file" name="photo" id="photo" accept="image/*" required onchange="previewImage(event)">
+      </div>
 
-        <div class="form-group mb-3">
-          <label for="preview" class="form-label">Image Preview</label>
-          <img
-            id="imagePreview"
-            class="img-fluid rounded shadow-sm"
-            style="max-height: 300px"
-          />
-        </div>
+      <div class="preview-container">
+        <label>Image Preview</label>
+        <img id="imagePreview" class="preview-img">
+      </div>
 
-        <input type="hidden" name="latitude" id="latitude" />
-        <input type="hidden" name="longitude" id="longitude" />
+      <input type="hidden" name="latitude" id="latitude">
+      <input type="hidden" name="longitude" id="longitude">
 
-        <button type="submit" class="btn btn-primary btn-block" id="uploadBtn">
-          Upload Photo
-        </button>
-      </form>
-    </div>
-    <div>
-      <a href="/allListing" class="btn btn-primary"
-        >Go to Dashboard</a>
-    </div>
+      <button type="submit" class="btn-primary">Upload Photo</button>
+    </form>
+
+    <a href="/allListing" class="btn-secondary">Go to Dashboard</a>
   </div>
 </div>
 
 <script>
-  // Image preview functionality
   function previewImage(event) {
     const reader = new FileReader();
     reader.onload = function () {
       const output = document.getElementById("imagePreview");
       output.src = reader.result;
-      output.style.display = "block"; // Show the image preview
+      output.style.display = "block";
     };
     reader.readAsDataURL(event.target.files[0]);
   }
 
-  // Geolocation functionality (if needed)
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
       document.getElementById("latitude").value = position.coords.latitude;
@@ -72,56 +47,179 @@
 <% } else if (user !== null && user.role === 'organization') { %>
 <div class="container mt-5">
   <h1 class="text-center">Welcome, <%= user.name %>!</h1>
-  <div class="text-center">
-    <p>You can now manage orphan requests, check reports, and more.</p>
-    <a href="/dashboard/<%= user.id %>" class="btn btn-primary"
-      >Go to Dashboard</a>
-  </div>
+  <p class="text-center">You can now manage orphan requests, check reports, and more.</p>
 
-  <div class="mt-4">
-    <h2>Organization Features:</h2>
-    <ul class="list-group">
-      <li class="list-group-item">Manage orphan requests</li>
-      <li class="list-group-item">View activity reports</li>
-      <li class="list-group-item">Update organizational profile</li>
+  <a href="/dashboard/<%= user.id %>" class="btn-primary">Go to Dashboard</a>
+
+  <div class="feature-box">
+    <h2>Organization Features</h2>
+    <ul>
+      <li><i class="fas fa-tasks"></i> Manage orphan requests</li>
+      <li><i class="fas fa-chart-line"></i> View activity reports</li>
+      <li><i class="fas fa-building"></i> Update organizational profile</li>
     </ul>
   </div>
 </div>
 
 <% } else { %>
-
-<div class="container mt-5 text-center">
+<div class="home-container">
   <h1>Welcome to Our Orphan Child Support Platform</h1>
-  <p class="lead">
-    Join us in making a difference by helping orphan children in need.
-  </p>
-  <div class="mt-4">
+  <p>Join us in making a difference by helping orphan children in need.</p>
+
+  <div class="why-choose">
     <h2>Why Choose Us?</h2>
-    <ul class="list-unstyled">
-      <li>👶 Connect with orphan children who need your help.</li>
-      <li>📸 Upload and manage requests to provide assistance.</li>
-      <li>🌍 Be part of a compassionate community.</li>
-      <li>📈 Track your contributions and impact.</li>
+    <ul>
+      <li><i class="fas fa-hands-helping"></i> Connect with orphan children who need your help.</li>
+      <li><i class="fas fa-upload"></i> Upload and manage requests to provide assistance.</li>
+      <li><i class="fas fa-users"></i> Be part of a compassionate community.</li>
+      <li><i class="fas fa-chart-bar"></i> Track your contributions and impact.</li>
     </ul>
   </div>
 
-  <div class="mt-4">
-    <a href="/login" class="btn btn-primary btn-lg">Login</a>
-    <a href="/signup" class="btn btn-warning btn-lg">Regsiter</a>
+  <div class="auth-buttons">
+    <a href="/login" class="btn-primary"><i class="fas fa-sign-in-alt"></i> Login</a>
+    <a href="/signup" class="btn-warning"><i class="fas fa-user-plus"></i> Register</a>
   </div>
 </div>
 <% } %>
 
 <style>
-  #imagePreview {
-    display: none;
-    margin-top: 20px;
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
   }
-  /* Additional styles for the home page */
+
   .container {
-    max-width: 800px;
+    max-width: 600px;
     margin: auto;
     padding: 20px;
+    text-align: center;
   }
-  
+
+  h1 {
+    color: #333;
+    font-weight: bold;
+  }
+
+  .upload-box {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+
+  input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .preview-container {
+    margin-top: 15px;
+    text-align: center;
+  }
+
+  .preview-img {
+    max-height: 250px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+    display: none;
+  }
+
+  .btn-primary, .btn-secondary, .btn-warning {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  .btn-primary {
+    background: #007bff;
+  }
+
+  .btn-secondary {
+    background: #6c757d;
+  }
+
+  .btn-warning {
+    background: #ffc107;
+  }
+
+  .feature-box {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    text-align: left;
+  }
+
+  .feature-box ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .feature-box li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .home-container {
+    max-width: 700px;
+    margin: auto;
+    text-align: center;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .why-choose {
+    margin-top: 20px;
+    text-align: left;
+  }
+
+  .why-choose ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .why-choose li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+  }
+
+  .why-choose i {
+    color: #007bff;
+    margin-right: 10px;
+    font-size: 18px;
+  }
+
+  .auth-buttons {
+    margin-top: 20px;
+  }
+
+  .auth-buttons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
 </style>
