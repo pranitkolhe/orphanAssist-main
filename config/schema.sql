@@ -25,7 +25,7 @@ CREATE TABLE requests (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   photo VARCHAR(255),
-  llatitude DECIMAL(10, 8),
+  latitude DECIMAL(10, 8),
   longitude DECIMAL(11, 8),
   status ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
   organization_id INT,

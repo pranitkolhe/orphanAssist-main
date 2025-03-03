@@ -84,8 +84,8 @@ const httpsServer = https.createServer({ key, cert }, app);
 const httpServer = http.createServer(app);
 
 // Start both HTTP and HTTPS servers
-httpServer.listen(80, () => {
-  console.log("HTTP Server running on port 80");
+httpServer.listen(8080, () => {
+  console.log("HTTP Server running on port 8080");
 });
 
 httpsServer.listen(PORT, () => {
