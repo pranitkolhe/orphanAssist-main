@@ -242,11 +242,26 @@ exports.handleReject = (req, res) => {
 
 exports.showAllListing = async (req, res) => {
   try {
-    const organisations = await Organization.get(); // Wait for the promise to resolve
-    console.log(organisations);
-    res.render("pages/index/allListing.ejs", { organisations });
+    const organizations = await Organization.get(); // Wait for the promise to resolve
+    console.log(organizations);
+    res.render("pages/index/allListing.ejs", { organizations });
   } catch (error) {
     console.error("Error fetching organizations:", error);
     res.status(500).send("Internal Server Error");
   }
 };
+
+exports.showOrganizationDetails = async (req,res) =>{
+    const organizationId = req.params.id;
+    try{
+      Organization.findById(organizationId,(err,organization)=>{
+        if(err){
+          return res.send(err);
+        }
+      res.render("pages/index/organizationDetails.ejs",{ organization });
+      });
+    }catch(err){
+      console.log(err);
+    }
+    
+}

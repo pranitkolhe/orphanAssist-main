@@ -1,6 +1,7 @@
 const db = require("../config/db.js");
 
 const Organization = {
+  
   get: () => {
     return new Promise((resolve, reject) => {
       const query = "SELECT * FROM organizations";

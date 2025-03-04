@@ -19,6 +19,7 @@ const {
   handleReject,
   handleAccept,
   showAllListing,
+  showOrganizationDetails
 } = require("./controllers/indexController");
 
 app.use(
@@ -53,6 +54,7 @@ app.get("/signup", showSignupPage);
 app.get("/login", showLoginPage);
 app.get("/logout", handleLogout);
 app.get("/allListing",showAllListing);
+app.get("/organization/:id",showOrganizationDetails);
 
 app.post("/signup", handleSignup);
 app.post("/login", handleLogin);

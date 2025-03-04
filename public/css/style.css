@@ -1,0 +1,31 @@
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 15px;
+    background: #fff;
+  }
+  
+  .form-control,
+  .form-select {
+    border: 2px solid #dee2e6;
+    transition: all 0.3s ease;
+  }
+  
+  .form-control:focus,
+  .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border: none;
+    transition: background 0.3s ease-in-out;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  .login-card {
+    margin-top: -30px; /* Moves it upwards */
+  }

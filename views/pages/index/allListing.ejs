@@ -16,7 +16,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/index/home.ejs">Home</a>
+                        <a class="nav-link" href="/">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Listings</a>
@@ -32,8 +32,8 @@
     <div class="container my-5">
         <h1 class="text-center mb-4">Orphanage Listings</h1>
         <div class="row">
-            <% if (organisations.length > 0) { %>
-                <% organisations.forEach(org => { %>
+            <% if (organizations.length > 0) { %>
+                <% organizations.forEach(org => { %>
                     <div class="col-md-6 col-lg-4">
                         <div class="card shadow-lg mb-4">
                             <div class="card-body">
@@ -41,7 +41,7 @@
                                 <p class="card-text"><strong>Email:</strong> <%= org.email %></p>
                                 <p class="card-text"><strong>Phone:</strong> <%= org.phone %></p>
                                 <p class="card-text"><strong>Location:</strong> <%= org.latitude %>, <%= org.longitude %></p>
-                                <a href="#" class="btn btn-dark">View Details</a>
+                                <a href="/organization/<%= org.id %>" class="btn btn-dark">View Details</a>
                             </div>
                         </div>
                     </div>

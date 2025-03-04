@@ -1,270 +1,186 @@
 <% layout('layouts/boilerplate') -%>
 
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-      <div class="card shadow-sm p-4">
-        <h2 class="text-center mb-4">Sign Up</h2>
-        <form action="/signup" method="POST">
-          <!-- Name Field -->
-          <div class="mb-3">
-            <label for="name" class="form-label">Name:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="name"
-              id="name"
-              placeholder="Enter your name"
-              required
-            />
-          </div>
-
-          <!-- Email Field -->
-          <div class="mb-3">
-            <label for="email" class="form-label">Email:</label>
-            <input
-              type="email"
-              class="form-control"
-              name="email"
-              id="email"
-              placeholder="Enter your email"
-              required
-            />
-          </div>
-
-          <!-- Phone Field -->
-          <div class="mb-3">
-            <label for="phone" class="form-label">Phone:</label>
-            <input
-              type="tel"
-              class="form-control"
-              name="phone"
-              id="phone"
-              placeholder="Enter your phone number"
-              required
-            />
-          </div>
-
-          <!-- Password Field -->
-          <div class="mb-3">
-            <label for="password" class="form-label">Password:</label>
-            <input
-              type="password"
-              class="form-control"
-              name="password"
-              id="password"
-              placeholder="Enter your password"
-              required
-            />
-          </div>
-
-          <!-- Role Selection -->
-          <div class="mb-3">
-            <label for="role" class="form-label">Sign up as:</label>
-            <select
-              name="role"
-              id="role"
-              class="form-select"
-              aria-label="Default select example"
-              required
-            >
-              <option value="user">User</option>
-              <option value="organization">Organization</option>
-            </select>
-          </div>
-
-          <!-- Location Field (Hidden for users) -->
-          <div id="locationField" style="display: none">
-            <div class="mb-3">
-              <label for="locationInput" class="form-label"
-                >Select Location:</label
-              >
-              <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="locationInput"
-                  placeholder="Search for a location"
-                />
-                <button
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  id="searchButton"
-                >
-                  Search
-                </button>
-              </div>
-            </div>
-
-            <!-- Map Display -->
-            <div class="mb-3">
-              <div
-                id="map"
-                style="height: 400px; width: 100%; border: 1px solid #ccc"
-              ></div>
-            </div>
-
-            <!-- Hidden Fields for Latitude and Longitude -->
-            <input type="hidden" name="latitude" id="latitude" />
-            <input type="hidden" name="longitude" id="longitude" />
-          </div>
-
-          <!-- Submit Button -->
-          <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary btn-block">
-              Sign Up
-            </button>
-          </div>
-        </form>
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card signup-card p-4">
+    <h2 class="text-center mb-4">Create an Account</h2>
+    <form action="/signup" method="POST">
+      <!-- Name Field -->
+      <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-user"></i></span>
+          <input type="text" class="form-control" name="name" id="name" placeholder="John Doe" required />
+        </div>
       </div>
-    </div>
+
+      <!-- Email Field -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email Address</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+          <input type="email" class="form-control" name="email" id="email" placeholder="example@email.com" required />
+        </div>
+      </div>
+
+      <!-- Phone Field -->
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone Number</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-phone"></i></span>
+          <input type="tel" class="form-control" name="phone" id="phone" placeholder="+91 xxxxxxxxxx" required />
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-lock"></i></span>
+          <input type="password" class="form-control" name="password" id="password" placeholder="••••••••" required />
+        </div>
+      </div>
+
+      <!-- Role Selection -->
+      <div class="mb-4">
+        <label class="form-label d-block">Sign Up As</label>
+        <div class="btn-group w-100" role="group">
+          <input type="radio" class="btn-check" name="role" id="roleUser" value="user" checked />
+          <label class="btn btn-outline-primary" for="roleUser">User</label>
+
+          <input type="radio" class="btn-check" name="role" id="roleOrg" value="organization" />
+          <label class="btn btn-outline-primary" for="roleOrg">Organization</label>
+        </div>
+      </div>
+
+      <!-- Location Field (Visible only for Organizations) -->
+      <div id="locationField" class="d-none">
+        <div class="mb-3">
+          <label for="locationInput" class="form-label">Search Location</label>
+          <div class="input-group">
+            <input type="text" class="form-control" id="locationInput" placeholder="Enter location" />
+            <button class="btn btn-secondary" type="button" id="searchButton"><i class="fas fa-search"></i></button>
+          </div>
+        </div>
+
+        <!-- Map Display -->
+        <div class="mb-3">
+          <div id="map" class="map-container"></div>
+        </div>
+
+        <input type="hidden" name="latitude" id="latitude" />
+        <input type="hidden" name="longitude" id="longitude" />
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+    </form>
   </div>
 </div>
 
-<!-- Custom CSS -->
+<!-- Custom Styles -->
 <style>
   body {
-    background-color: #f8f9fa;
+    background: #ffffff; /* Set plain white background */
+    font-family: 'Poppins', sans-serif;
   }
 
-  .card {
-    background-color: white;
-    border-radius: 10px;
+  .signup-card {
+    width: 100%;
+    max-width: 450px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  .input-group-text {
+    background: #007bff;
+    color: white;
     border: none;
   }
 
-  .form-label {
-    font-weight: 500;
+  .form-control:focus {
+    box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.5);
   }
 
-  #map {
-    border-radius: 5px;
-  }
-
-  .btn-block {
-    background-color: #007bff;
+  .btn-outline-primary:hover {
+    background: #007bff;
     color: white;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
   }
 
-  .btn-block:hover {
-    background-color: #0056b3;
+  .map-container {
+    height: 300px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 
-<!-- JavaScript for Map and Role Selection -->
+<!-- JavaScript for Map & Role Selection -->
 <script>
-  // Event listener for role selection
-  document.getElementById("role").addEventListener("change", function () {
-    const locationField = document.getElementById("locationField");
-    if (this.value === "organization") {
-      locationField.style.display = "block"; // Show location input
-      initMap(); // Initialize the map when the organization role is selected
-    } else {
-      locationField.style.display = "none"; // Hide location input
-    }
+  document.querySelectorAll("input[name='role']").forEach((radio) => {
+    radio.addEventListener("change", function () {
+      document.getElementById("locationField").classList.toggle("d-none", this.value !== "organization");
+      if (this.value === "organization") initMap();
+    });
   });
 
   function initMap() {
-    const map = L.map("map").setView([20.5937, 78.9629], 5); // Initial view over India
-
-    // Add OpenStreetMap tile layer
+    const map = L.map("map").setView([20.5937, 78.9629], 5);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution: "© OpenStreetMap",
+      attribution: "©️ OpenStreetMap"
     }).addTo(map);
 
     let marker;
-
-    // Attempt to get the user's current location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         function (position) {
           const { latitude, longitude } = position.coords;
-
-          // Set map view to the user's current location
-          map.setView([latitude, longitude], 13); // Zoom level 13
-
-          // Add a marker at the user's current location
+          map.setView([latitude, longitude], 13);
           marker = L.marker([latitude, longitude]).addTo(map);
-
-          // Set latitude and longitude in hidden input fields
           document.getElementById("latitude").value = latitude;
           document.getElementById("longitude").value = longitude;
         },
         function () {
-          alert(
-            "Unable to retrieve your location. Please enable location services."
-          );
+          alert("Enable location services for better accuracy.");
         }
       );
-    } else {
-      alert("Geolocation is not supported by this browser.");
     }
 
-    // Handle click event on the map
     map.on("click", function (e) {
       const { lat, lng } = e.latlng;
-
-      // Remove existing marker if present
-      if (marker) {
-        map.removeLayer(marker);
-      }
-
-      // Add a new marker at the clicked location
+      if (marker) map.removeLayer(marker);
       marker = L.marker([lat, lng]).addTo(map);
-
-      // Set latitude and longitude in hidden input fields
       document.getElementById("latitude").value = lat;
       document.getElementById("longitude").value = lng;
     });
 
-    // Handle search functionality
-    document
-      .getElementById("searchButton")
-      .addEventListener("click", function () {
-        const locationInput = document.getElementById("locationInput").value;
-
-        if (locationInput) {
-          fetch(
-            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-              locationInput
-            )}&format=json&addressdetails=1`
-          )
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.length > 0) {
-                const { lat, lon } = data[0]; // Get the first result's latitude and longitude
-
-                // Set the map view to the searched location
-                map.setView([lat, lon], 13); // Zoom level 13
-
-                // Remove existing marker if present
-                if (marker) {
-                  map.removeLayer(marker);
-                }
-
-                // Add a marker at the searched location
-                marker = L.marker([lat, lon]).addTo(map);
-
-                // Set latitude and longitude in hidden input fields
-                document.getElementById("latitude").value = lat;
-                document.getElementById("longitude").value = lon;
-              } else {
-                alert("Location not found. Please try adifferent search.");
-              }
-            })
-            .catch((error) => {
-              console.error("Error fetching location:", error);
-              alert("Error fetching location. Please try again.");
-            });
-        } else {
-          alert("Please enter a location to search.");
-        }
-      });
+    document.getElementById("searchButton").addEventListener("click", function () {
+      const query = document.getElementById("locationInput").value;
+      if (!query) return alert("Enter a location to search.");
+      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.length > 0) {
+            const { lat, lon } = data[0];
+            map.setView([lat, lon], 13);
+            if (marker) map.removeLayer(marker);
+            marker = L.marker([lat, lon]).addTo(map);
+            document.getElementById("latitude").value = lat;
+            document.getElementById("longitude").value = lon;
+          } else {
+            alert("Location not found. Try again.");
+          }
+        })
+        .catch(() => alert("Error fetching location."));
+    });
   }
 </script>
+
+<!-- Font Awesome for Icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
